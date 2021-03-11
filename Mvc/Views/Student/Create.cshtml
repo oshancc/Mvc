@@ -1,0 +1,40 @@
+﻿@model Mvc.Models.Student
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Student</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @*<form method="post" asp-action="Create">*@
+        @using (Html.BeginForm("Create", "Student", FormMethod.Post))
+        {
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StudentName" class="control-label"></label>
+                <input asp-for="StudentName" class="form-control" />
+                <span asp-validation-for="StudentName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                @Html.DropDownListFor(model => model.CourseId, new SelectList(ViewBag.CourseId, "Value", "Text", "select"))
+                @Html.ValidationMessageFor(model => model.CourseId)
+            </div>
+
+
+        <div class="form-group">
+            <input type="submit" value="submit" class="btn btn-primary" />
+        </div>
+        }
+        @*</form>*@
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
