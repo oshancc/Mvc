@@ -18,19 +18,19 @@ namespace Mvc.Controllers
         }
         public IActionResult Index()
         {
-            var data = db.Students.Include("Course").ToList(); 
-                return View(data);
-            
-           
+            var data = db.Students.Include("Course").ToList();
+            return View(data);
+
+
         }
 
-       
+
         public IActionResult Create(int id)
         {
             var student = db.Students.Find(id);
             ViewBag.CourseId = new SelectList(db.Courses, "CourseId", "CourseName");
             return View(student);
-            
+
         }
 
         [HttpPost]
@@ -42,11 +42,11 @@ namespace Mvc.Controllers
 
         }
 
-        public IActionResult Edit(int id=0)
+        public IActionResult Edit(int id = 0)
         {
             var student = db.Students.Find(id);
             ViewBag.CourseId = new SelectList(db.Courses, "CourseId", "CourseName", student.CourseId);
-            if(student == null)
+            if (student == null)
             {
                 return HttpNotFound();
             }
@@ -65,11 +65,43 @@ namespace Mvc.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(objStudent).State = EntityState.Modified;
-               
+
             }
             db.SaveChanges();
             return RedirectToAction("Index", new { id = objStudent.CourseId });
 
         }
+
+        public IActionResult Delete(int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+
+            }
+            var obj = db.Students.Include("Course").FirstOrDefault(c => c.StudentId == id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+
+            public IActionResult DeleteStudent(int id)
+            {
+                var obj = db.Students.Find(id);   
+                if (obj == null)
+                {
+                return NotFound();
+                }
+            db.Students.Remove(obj);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+
+            }
+        
     }
 }
